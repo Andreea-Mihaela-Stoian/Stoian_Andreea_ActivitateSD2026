@@ -15,11 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HeapStudenti.c">
+    <ClCompile Include="ABC_Carti_Biblioteca.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="studenti.txt" />
   </ItemGroup>
 </Project>

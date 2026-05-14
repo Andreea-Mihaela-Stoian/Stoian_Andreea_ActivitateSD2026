@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{56daecef-808a-44ac-bec4-b5d75af106de}</ProjectGuid>
-    <RootNamespace>HeapStudenti</RootNamespace>
+    <ProjectGuid>{a6057ab1-2962-46a0-806f-7510e7d45ba3}</ProjectGuid>
+    <RootNamespace>ABCCartiBiblioteca</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -123,10 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HeapStudenti.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="studenti.txt" />
+    <ClCompile Include="ABC_Carti_Biblioteca.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

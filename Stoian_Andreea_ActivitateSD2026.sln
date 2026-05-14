@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeapStudenti", "HeapStudent
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeapProduse", "HeapProduse\HeapProduse.vcxproj", "{4328E350-13B8-4E68-8EA0-F7CA7E104660}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ABC_Carti_Biblioteca", "ABC_Carti_Biblioteca\ABC_Carti_Biblioteca.vcxproj", "{A6057AB1-2962-46A0-806F-7510E7D45BA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{4328E350-13B8-4E68-8EA0-F7CA7E104660}.Release|x64.Build.0 = Release|x64
 		{4328E350-13B8-4E68-8EA0-F7CA7E104660}.Release|x86.ActiveCfg = Release|Win32
 		{4328E350-13B8-4E68-8EA0-F7CA7E104660}.Release|x86.Build.0 = Release|Win32
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Debug|x64.ActiveCfg = Debug|x64
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Debug|x64.Build.0 = Debug|x64
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Debug|x86.ActiveCfg = Debug|Win32
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Debug|x86.Build.0 = Debug|Win32
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Release|x64.ActiveCfg = Release|x64
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Release|x64.Build.0 = Release|x64
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Release|x86.ActiveCfg = Release|Win32
+		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
