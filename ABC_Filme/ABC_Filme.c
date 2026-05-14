@@ -139,4 +139,134 @@ void afisarePreordine(Nod* rad) {
 		afisarePreordine(rad->stanga);
 		afisarePreordine(rad->dreapta);
 	}
+}void dezalocareArboreDeFilme(Nod** rad) {
+	// dezalocam toate nodurile
+
+	if (*rad) {
+		dezalocareArboreDeFilme(&(*rad)->stanga);
+		dezalocareArboreDeFilme(&(*rad)->dreapta);
+
+		free((*rad)->info.titlu);
+		free((*rad)->info.regizor);
+
+		free(*rad);
+
+		*rad = NULL;
+	}
+}
+
+Film getFilmByID(Nod* rad, int id) {
+	Film film;
+
+	film.id = -1;
+	film.anLansare = 0;
+	film.incasari = 0;
+	film.titlu = NULL;
+	film.regizor = NULL;
+	film.categorie = '-';
+
+	if (rad) {
+		if (rad->info.id == id) {
+			film = rad->info;
+
+			film.titlu = (char*)malloc(strlen(rad->info.titlu) + 1);
+			strcpy_s(film.titlu, strlen(rad->info.titlu) + 1, rad->info.titlu);
+
+			film.regizor = (char*)malloc(strlen(rad->info.regizor) + 1);
+			strcpy_s(film.regizor, strlen(rad->info.regizor) + 1, rad->info.regizor);
+		}
+		else if (id < rad->info.id) {
+			film = getFilmByID(rad->stanga, id);
+		}
+		else {
+			film = getFilmByID(rad->dreapta, id);
+		}
+	}
+
+	return film;
+}
+
+int determinaNumarNoduri(Nod* rad) {
+	if (rad) {
+		return determinaNumarNoduri(rad->stanga)
+			+ determinaNumarNoduri(rad->dreapta)
+			+ 1;
+	}
+
+	return 0;
+}
+
+int maxim(int a, int b) {
+	return a > b ? a : b;
+}
+
+int calculeazaInaltimeArbore(Nod* rad) {
+	if (rad) {
+		return maxim(
+			calculeazaInaltimeArbore(rad->stanga),
+			calculeazaInaltimeArbore(rad->dreapta)
+		) + 1;
+	}
+
+	return 0;
+}
+
+float calculeazaIncasariTotale(Nod* rad) {
+	// calculeaza incasarile tuturor filmelor
+
+	if (rad) {
+		return rad->info.incasari
+			+ calculeazaIncasariTotale(rad->stanga)
+			+ calculeazaIncasariTotale(rad->dreapta);
+	}
+
+	return 0;
+}
+
+int numaraFilmeRegizor(Nod* rad, const char* regizor) {
+	// numara filmele unui regizor
+
+	if (rad) {
+		int nr = numaraFilmeRegizor(rad->stanga, regizor)
+			+ numaraFilmeRegizor(rad->dreapta, regizor);
+
+		if (strcmp(rad->info.regizor, regizor) == 0) {
+			nr++;
+		}
+
+		return nr;
+	}
+
+	return 0;
+}
+
+int main() {
+	Nod* rad = citireArboreDeFilmeDinFisier("filme.txt");
+
+	printf("Afisare preordine:\n");
+	afisarePreordine(rad);
+
+	printf("Afisare inordine:\n");
+	afisareFilmeInordine(rad);
+
+	printf("Film cautat:\n");
+	Film film = getFilmByID(rad, 8);
+
+	afisareFilm(film);
+
+	free(film.titlu);
+	free(film.regizor);
+
+	printf("Numar noduri: %d\n", determinaNumarNoduri(rad));
+
+	printf("Inaltime arbore: %d\n", calculeazaInaltimeArbore(rad));
+
+	printf("Incasari totale: %.2f\n", calculeazaIncasariTotale(rad));
+
+	printf("Filme Christopher Nolan: %d\n",
+		numaraFilmeRegizor(rad, "Christopher Nolan"));
+
+	dezalocareArboreDeFilme(&rad);
+
+	return 0;
 }
