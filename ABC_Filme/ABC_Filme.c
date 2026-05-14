@@ -78,3 +78,65 @@ void afisareFilm(Film film) {
 	printf("Regizor: %s\n", film.regizor);
 	printf("Categorie: %c\n\n", film.categorie);
 }
+void adaugaFilmInArbore(Nod** rad, Film filmNou) {
+	// adauga un film in arbore dupa id
+
+	if (*rad == NULL) {
+		Nod* nod = (Nod*)malloc(sizeof(Nod));
+
+		nod->info = filmNou;
+		nod->stanga = NULL;
+		nod->dreapta = NULL;
+
+		*rad = nod;
+	}
+	else {
+		if ((*rad)->info.id > filmNou.id) {
+			adaugaFilmInArbore(&(*rad)->stanga, filmNou);
+		}
+
+		if ((*rad)->info.id < filmNou.id) {
+			adaugaFilmInArbore(&(*rad)->dreapta, filmNou);
+		}
+	}
+}
+
+Nod* citireArboreDeFilmeDinFisier(const char* numeFisier) {
+	// citeste filmele din fisier si construieste arborele
+
+	Nod* rad = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		while (!feof(f)) {
+			Film film = citireFilmDinFisier(f);
+
+			if (film.id != -1) {
+				adaugaFilmInArbore(&rad, film);
+			}
+		}
+
+		fclose(f);
+	}
+
+	return rad;
+}
+
+// Parcurgere inordine
+void afisareFilmeInordine(Nod* rad) {
+	if (rad) {
+		afisareFilmeInordine(rad->stanga);
+		afisareFilm(rad->info);
+		afisareFilmeInordine(rad->dreapta);
+	}
+}
+
+// Parcurgere preordine
+void afisarePreordine(Nod* rad) {
+	if (rad) {
+		afisareFilm(rad->info);
+		afisarePreordine(rad->stanga);
+		afisarePreordine(rad->dreapta);
+	}
+}
