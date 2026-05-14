@@ -101,3 +101,109 @@ void afisareAeroport(Aeroport aeroport) {
 		aeroport.nume,
 		aeroport.traficMilioane);
 }
+// Inserare nod principal
+void inserareListaPrincipala(NodPrincipal** cap, Aeroport aeroport) {
+	NodPrincipal* nou =
+		(NodPrincipal*)malloc(sizeof(NodPrincipal));
+
+	nou->info = aeroport;
+	nou->next = NULL;
+	nou->vecini = NULL;
+
+	if (*cap) {
+		NodPrincipal* aux = *cap;
+
+		while (aux->next) {
+			aux = aux->next;
+		}
+
+		aux->next = nou;
+	}
+	else {
+		*cap = nou;
+	}
+}
+
+// Inserare nod secundar
+void inserareListaSecundara(
+	NodSecundar** cap,
+	NodPrincipal* info) {
+
+	NodSecundar* nou =
+		(NodSecundar*)malloc(sizeof(NodSecundar));
+
+	nou->info = info;
+	nou->next = NULL;
+
+	if (*cap) {
+		NodSecundar* aux = *cap;
+
+		while (aux->next) {
+			aux = aux->next;
+		}
+
+		aux->next = nou;
+	}
+	else {
+		*cap = nou;
+	}
+}
+
+// Cautare dupa id
+NodPrincipal* cautareNodDupaId(
+	NodPrincipal* graf,
+	int id) {
+
+	while (graf != NULL &&
+		graf->info.id != id) {
+
+		graf = graf->next;
+	}
+
+	return graf;
+}
+
+// Adauga muchie intre aeroporturi
+void adaugaMuchie(
+	NodPrincipal* graf,
+	int id1,
+	int id2) {
+
+	NodPrincipal* nod1 =
+		cautareNodDupaId(graf, id1);
+
+	NodPrincipal* nod2 =
+		cautareNodDupaId(graf, id2);
+
+	if (nod1 && nod2) {
+		inserareListaSecundara(
+			&nod1->vecini,
+			nod2);
+
+		inserareListaSecundara(
+			&nod2->vecini,
+			nod1);
+	}
+}
+
+// Afisare graf
+void afisareGraf(NodPrincipal* graf) {
+	while (graf) {
+
+		afisareAeroport(graf->info);
+
+		printf("\nVecini:");
+
+		NodSecundar* vecini = graf->vecini;
+
+		while (vecini) {
+			afisareAeroport(vecini->info->info);
+
+			vecini = vecini->next;
+		}
+
+		printf("\n");
+
+		graf = graf->next;
+	}
+}
