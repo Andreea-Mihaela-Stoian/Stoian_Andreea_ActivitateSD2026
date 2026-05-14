@@ -1,0 +1,5 @@
+101,5,4500.50,Popescu Ana,IT,A
+102,2,3800.00,Ionescu Mihai,HR,B
+103,7,6200.75,Dumitrescu Ioana,IT,C
+104,1,3200.00,Stan Andrei,Marketing,D
+105,4,5000.25,Marin Elena,Financiar,E
