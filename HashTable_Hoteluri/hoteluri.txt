@@ -1,0 +1,5 @@
+101,4,350.50,Grand Hotel,Bucuresti,A
+102,3,220.00,Hotel Central,Brasov,B
+103,5,600.75,Sea View,Constanta,C
+104,2,150.00,Mountain Inn,Sinaia,D
+105,4,410.25,City Plaza,Cluj,E
