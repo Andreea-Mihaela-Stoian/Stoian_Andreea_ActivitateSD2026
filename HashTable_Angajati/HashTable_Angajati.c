@@ -186,3 +186,159 @@ void afisareTabelaDeAngajati(HashTable ht) {
 			ht.vector[i]);
 	}
 }
+// Dezalocare tabela
+void dezalocareTabelaDeAngajati(HashTable* ht) {
+
+	for (int i = 0; i < ht->dim; i++) {
+
+		Nod* cap = ht->vector[i];
+
+		while (cap) {
+
+			Nod* aux = cap;
+
+			cap = cap->next;
+
+			free(aux->info.nume);
+			free(aux->info.departament);
+
+			free(aux);
+		}
+	}
+
+	free(ht->vector);
+
+	ht->vector = NULL;
+	ht->dim = 0;
+}
+
+// Calculeaza salariul mediu pe fiecare cluster
+float* calculeazaSalariiMediiPerClustere(
+	HashTable ht,
+	int* nrClustere) {
+
+	float* vectorMedii =
+		(float*)malloc(sizeof(float) * ht.dim);
+
+	*nrClustere = 0;
+
+	for (int i = 0; i < ht.dim; i++) {
+
+		float suma = 0;
+		int nr = 0;
+
+		Nod* cap = ht.vector[i];
+
+		while (cap) {
+
+			suma += cap->info.salariu;
+
+			nr++;
+
+			cap = cap->next;
+		}
+
+		if (nr > 0) {
+
+			vectorMedii[*nrClustere] =
+				suma / nr;
+
+			(*nrClustere)++;
+		}
+	}
+
+	return vectorMedii;
+}
+
+// Cauta angajat dupa id
+Angajat getAngajatDupaID(
+	HashTable ht,
+	int idCautat) {
+
+	Angajat a;
+
+	a.id = -1;
+	a.vechime = 0;
+	a.salariu = 0;
+	a.nume = NULL;
+	a.departament = NULL;
+	a.cod = '-';
+
+	int pozitie =
+		calculeazaHash(idCautat, ht.dim);
+
+	Nod* cap = ht.vector[pozitie];
+
+	while (cap) {
+
+		if (cap->info.id == idCautat) {
+
+			a = cap->info;
+
+			a.nume =
+				(char*)malloc(
+					strlen(cap->info.nume) + 1);
+
+			strcpy_s(
+				a.nume,
+				strlen(cap->info.nume) + 1,
+				cap->info.nume);
+
+			a.departament =
+				(char*)malloc(
+					strlen(cap->info.departament) + 1);
+
+			strcpy_s(
+				a.departament,
+				strlen(cap->info.departament) + 1,
+				cap->info.departament);
+
+			return a;
+		}
+
+		cap = cap->next;
+	}
+
+	return a;
+}
+
+int main() {
+
+	HashTable ht =
+		citireAngajatiDinFisier(
+			"angajati.txt");
+
+	printf("Tabela hash:\n");
+
+	afisareTabelaDeAngajati(ht);
+
+	printf("\nAngajat cautat:\n");
+
+	Angajat a =
+		getAngajatDupaID(ht, 103);
+
+	afisareAngajat(a);
+
+	free(a.nume);
+	free(a.departament);
+
+	int nrClustere = 0;
+
+	float* medii =
+		calculeazaSalariiMediiPerClustere(
+			ht,
+			&nrClustere);
+
+	printf("\nSalarii medii:\n");
+
+	for (int i = 0; i < nrClustere; i++) {
+
+		printf("%.2f\n", medii[i]);
+	}
+
+	free(medii);
+
+	dezalocareTabelaDeAngajati(&ht);
+
+	return 0;
+}
