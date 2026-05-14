@@ -190,3 +190,180 @@ void dezalocareStivaDeProgramari(Stiva* stiva) {
 		free(p.pacient);
 	}
 }
+void enqueue(Coada* coada, Programare programare) {
+	// Adauga o programare la finalul cozii
+
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+
+	nou->info = programare;
+	nou->next = NULL;
+
+	if (coada->last) {
+		// Daca exista ultim nod, il legam de nodul nou
+		coada->last->next = nou;
+
+		// Noul nod devine ultimul
+		coada->last = nou;
+	}
+	else {
+		// Daca lista este goala, primul si ultimul sunt acelasi nod
+		coada->first = coada->last = nou;
+	}
+}
+
+Programare dequeue(Coada* coada) {
+	// Extrage prima programare din coada
+
+	Programare p;
+	p.id = -1;
+	p.durataMinute = 0;
+	p.cost = 0;
+	p.serviciu = NULL;
+	p.pacient = NULL;
+	p.cod = '-';
+
+	if (coada->first) {
+		Nod* aux = coada->first;
+
+		p = aux->info;
+
+		// Mutam inceputul cozii
+		coada->first = coada->first->next;
+
+		if (coada->first == NULL) {
+			// Daca nu mai exista noduri, coada devine goala
+			coada->last = NULL;
+		}
+
+		free(aux);
+	}
+
+	return p;
+}
+
+Coada citireCoadaDeProgramariDinFisier(const char* numeFisier) {
+	// Citeste programarile din fisier si le pune in coada
+
+	Coada coada;
+	coada.first = NULL;
+	coada.last = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		while (!feof(f)) {
+			Programare p = citireProgramareDinFisier(f);
+
+			if (p.id != -1) {
+				enqueue(&coada, p);
+			}
+		}
+
+		fclose(f);
+	}
+	else {
+		printf("Fisierul nu a fost gasit!\n");
+	}
+
+	return coada;
+}
+
+void afisareCoada(Coada coada) {
+	// Afiseaza coada fara sa o modifice
+
+	while (coada.first) {
+		afisareProgramare(coada.first->info);
+		coada.first = coada.first->next;
+	}
+}
+
+void dezalocareCoadaDeProgramari(Coada* coada) {
+	// Dezaloca toate programarile din coada
+
+	while (coada->first) {
+		Programare p = dequeue(coada);
+
+		free(p.serviciu);
+		free(p.pacient);
+	}
+}
+
+Programare getProgramareByID(Coada coada, int id) {
+	// Cauta o programare dupa id in coada
+
+	Programare p;
+	p.id = -1;
+	p.durataMinute = 0;
+	p.cost = 0;
+	p.serviciu = NULL;
+	p.pacient = NULL;
+	p.cod = '-';
+
+	while (coada.first) {
+		if (coada.first->info.id == id) {
+			p = coada.first->info;
+
+			// Copiere profunda pentru sirurile alocate dinamic
+			p.serviciu = (char*)malloc(strlen(coada.first->info.serviciu) + 1);
+			strcpy_s(p.serviciu, strlen(coada.first->info.serviciu) + 1, coada.first->info.serviciu);
+
+			p.pacient = (char*)malloc(strlen(coada.first->info.pacient) + 1);
+			strcpy_s(p.pacient, strlen(coada.first->info.pacient) + 1, coada.first->info.pacient);
+
+			return p;
+		}
+
+		coada.first = coada.first->next;
+	}
+
+	return p;
+}
+
+float calculeazaCostTotal(Coada coada) {
+	// Calculeaza suma costurilor din coada
+
+	float suma = 0;
+
+	while (coada.first) {
+		suma += coada.first->info.cost;
+		coada.first = coada.first->next;
+	}
+
+	return suma;
+}
+
+int main() {
+	Stiva stiva = citireStackProgramariDinFisier("programari.txt");
+
+	printf("Afisare stiva:\n");
+	afisareStiva(stiva);
+
+	printf("Numar elemente stiva: %d\n", sizeStack(stiva));
+
+	printf("\nPop din stiva:\n");
+	Programare p1 = popStack(&stiva);
+	afisareProgramare(p1);
+
+	free(p1.serviciu);
+	free(p1.pacient);
+
+	Coada coada = citireCoadaDeProgramariDinFisier("programari.txt");
+
+	printf("\nAfisare coada:\n");
+	afisareCoada(coada);
+
+	printf("\nProgramare cautata:\n");
+	Programare p2 = getProgramareByID(coada, 3);
+	afisareProgramare(p2);
+
+	free(p2.serviciu);
+	free(p2.pacient);
+
+	printf("Cost total programari: %.2f\n",
+		calculeazaCostTotal(coada));
+
+	dezalocareStivaDeProgramari(&stiva);
+	dezalocareCoadaDeProgramari(&coada);
+
+	return 0;
+}
