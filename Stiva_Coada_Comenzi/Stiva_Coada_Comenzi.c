@@ -101,3 +101,119 @@ void afisareComanda(Comanda comanda) {
 	printf("Client: %s\n", comanda.client);
 	printf("Cod: %c\n\n", comanda.cod);
 }
+void pushStack(Stiva* stiva, Comanda comanda) {
+	// Adauga o comanda in varful stivei
+
+	// Cream un nod nou
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+
+	// Punem comanda in nod
+	nou->info = comanda;
+
+	// Noul nod pointeaza catre fostul varf
+	nou->next = stiva->top;
+
+	// Noul nod devine varful stivei
+	stiva->top = nou;
+}
+
+Comanda popStack(Stiva* stiva) {
+	// Extrage comanda din varful stivei
+
+	Comanda c;
+	c.id = -1;
+	c.nrProduse = 0;
+	c.valoare = 0;
+	c.produs = NULL;
+	c.client = NULL;
+	c.cod = '-';
+
+	// Verificam daca stiva nu este goala
+	if (stiva->top) {
+		// Salvam nodul din varf
+		Nod* aux = stiva->top;
+
+		// Salvam informatia din nod
+		c = aux->info;
+
+		// Mutam varful pe urmatorul nod
+		stiva->top = stiva->top->next;
+
+		// Stergem doar nodul
+		// Informatia va fi returnata si dezalocata ulterior
+		free(aux);
+	}
+
+	return c;
+}
+
+int emptyStack(Stiva stiva) {
+	// Returneaza 1 daca stiva este goala
+	// Returneaza 0 daca exista elemente
+
+	return stiva.top == NULL;
+}
+
+Stiva citireStackComenziDinFisier(const char* numeFisier) {
+	// Citeste comenzile din fisier si le pune in stiva
+
+	Stiva stiva;
+	stiva.top = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		while (!feof(f)) {
+			// Citim o comanda
+			Comanda c = citireComandaDinFisier(f);
+
+			// Daca citirea a fost valida, o adaugam in stiva
+			if (c.id != -1) {
+				pushStack(&stiva, c);
+			}
+		}
+
+		fclose(f);
+	}
+	else {
+		printf("Fisierul nu a fost gasit!\n");
+	}
+
+	return stiva;
+}
+
+void afisareStiva(Stiva stiva) {
+	// Afiseaza stiva fara sa o modifice
+	// Parametrul este transmis prin valoare, deci lucram pe o copie
+
+	while (stiva.top) {
+		afisareComanda(stiva.top->info);
+		stiva.top = stiva.top->next;
+	}
+}
+
+int sizeStack(Stiva stiva) {
+	// Calculeaza numarul de elemente din stiva
+
+	int nr = 0;
+
+	while (stiva.top) {
+		nr++;
+		stiva.top = stiva.top->next;
+	}
+
+	return nr;
+}
+
+void dezalocareStivaDeComenzi(Stiva* stiva) {
+	// Dezaloca toate comenzile din stiva
+
+	while (stiva->top) {
+		// Scoatem o comanda din stiva
+		Comanda c = popStack(stiva);
+
+		// Dezalocam campurile alocate dinamic
+		free(c.produs);
+		free(c.client);
+	}
+}
