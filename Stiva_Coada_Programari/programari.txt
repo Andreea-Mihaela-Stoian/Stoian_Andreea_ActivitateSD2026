@@ -1,0 +1,5 @@
+1,30,250.50,Consultatie,Popescu Ana,A
+2,45,400.00,Ecografie,Ionescu Mihai,B
+3,20,150.00,Control,Dumitrescu Ioana,C
+4,60,700.00,RMN,Stan Andrei,D
+5,15,100.00,Analize,Marin Elena,E
