@@ -36,16 +36,25 @@ Produs citireProdusDinFisier(FILE* file) {
 	// separatorii folositi in fisier
 	char sep[3] = ",\n";
 
-	// citim o linie din fisier
-	fgets(buffer, 100, file);
+	Produs p;
+	p.id = -1;
+	p.stoc = 0;
+	p.pret = 0;
+	p.nume = NULL;
+	p.categorie = NULL;
+	p.cod = '-';
+
+	if (fgets(buffer, 100, file) == NULL) {
+		return p;
+	}
 
 	char* aux;
 
-	// cream produsul
-	Produs p;
-
-	// citim id-ul
 	aux = strtok(buffer, sep);
+	if (aux == NULL) {
+		return p;
+	}
+
 	p.id = atoi(aux);
 
 	// citim stocul
@@ -143,57 +152,27 @@ void filtreazaHeap(Heap heap, int pozitieNod) {
 		filtreazaHeap(heap, pozMin);
 	}
 }
-void filtreazaHeap(Heap heap, int pozitieNod) {
-	// functia reface proprietatea de MIN-HEAP
-	// criteriul folosit este pretul produsului
-	// produsul cu pretul cel mai mic trebuie sa fie mai sus in heap
 
-	int pozStanga = 2 * pozitieNod + 1;
-	int pozDreapta = 2 * pozitieNod + 2;
-
-	// presupunem initial ca nodul curent are pretul minim
-	int pozMin = pozitieNod;
-
-	// verificam daca fiul stang exista si are pret mai mic
-	if (pozStanga < heap.nrElemente &&
-		heap.produse[pozMin].pret > heap.produse[pozStanga].pret) {
-		pozMin = pozStanga;
-	}
-
-	// verificam daca fiul drept exista si are pret mai mic
-	if (pozDreapta < heap.nrElemente &&
-		heap.produse[pozMin].pret > heap.produse[pozDreapta].pret) {
-		pozMin = pozDreapta;
-	}
-
-	// daca unul dintre fii are pret mai mic, interschimbam produsele
-	if (pozMin != pozitieNod) {
-		Produs aux = heap.produse[pozMin];
-		heap.produse[pozMin] = heap.produse[pozitieNod];
-		heap.produse[pozitieNod] = aux;
-
-		// continuam filtrarea pe pozitia unde a ajuns produsul mutat
-		filtreazaHeap(heap, pozMin);
-	}
-}
 Heap citireHeapDeProduseDinFisier(const char* numeFisier) {
-	// citim produsele din fisier si le punem intr-un vector
-	// apoi transformam vectorul intr-un MIN-HEAP dupa pret
-
 	Heap heap = initializareHeap(10);
 
 	FILE* f = fopen(numeFisier, "r");
 
 	if (f) {
-		// citim cat timp mai exista linii in fisier
-		while (!feof(f)) {
-			heap.produse[heap.nrElemente++] = citireProdusDinFisier(f);
+		while (!feof(f) && heap.nrElemente < heap.lungime) {
+			Produs p = citireProdusDinFisier(f);
+
+			if (p.id != -1) {
+				heap.produse[heap.nrElemente++] = p;
+			}
 		}
 
 		fclose(f);
 	}
+	else {
+		printf("Fisierul nu a fost gasit!\n");
+	}
 
-	// incepem filtrarea de la ultimul parinte pana la radacina
 	for (int i = (heap.nrElemente - 2) / 2; i >= 0; i--) {
 		filtreazaHeap(heap, i);
 	}
