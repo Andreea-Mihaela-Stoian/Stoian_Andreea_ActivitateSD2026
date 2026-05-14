@@ -1,0 +1,5 @@
+10,2021,45.50,Inception,Christopher Nolan,A
+5,2019,30.00,Interstellar,Christopher Nolan,B
+15,2022,55.99,Oppenheimer,Christopher Nolan,C
+3,2018,25.75,Joker,Todd Phillips,D
+8,2020,40.20,Dune,Denis Villeneuve,E

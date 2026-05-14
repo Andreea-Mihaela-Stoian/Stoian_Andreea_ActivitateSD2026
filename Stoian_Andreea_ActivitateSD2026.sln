@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HeapProduse", "HeapProduse\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ABC_Carti_Biblioteca", "ABC_Carti_Biblioteca\ABC_Carti_Biblioteca.vcxproj", "{A6057AB1-2962-46A0-806F-7510E7D45BA3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ABC_Filme", "ABC_Filme\ABC_Filme.vcxproj", "{B58774F6-E770-4188-8E87-5FC525FD39F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Release|x64.Build.0 = Release|x64
 		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Release|x86.ActiveCfg = Release|Win32
 		{A6057AB1-2962-46A0-806F-7510E7D45BA3}.Release|x86.Build.0 = Release|Win32
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Debug|x64.ActiveCfg = Debug|x64
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Debug|x64.Build.0 = Debug|x64
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Debug|x86.ActiveCfg = Debug|Win32
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Debug|x86.Build.0 = Debug|Win32
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Release|x64.ActiveCfg = Release|x64
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Release|x64.Build.0 = Release|x64
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Release|x86.ActiveCfg = Release|Win32
+		{B58774F6-E770-4188-8E87-5FC525FD39F5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
