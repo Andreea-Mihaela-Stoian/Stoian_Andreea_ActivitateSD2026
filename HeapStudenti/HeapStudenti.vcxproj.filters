@@ -15,11 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Stoian_Andreea_ActivitateSD2026\HeapStudenti.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <Text Include="..\Stoian_Andreea_ActivitateSD2026\studenti.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Stoian_Andreea_ActivitateSD2026\studenti.txt" />
+    <ClCompile Include="HeapStudenti.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
