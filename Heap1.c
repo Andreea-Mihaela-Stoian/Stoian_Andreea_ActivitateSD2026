@@ -95,3 +95,108 @@ void afisareProdus(Produs produs) {
 
 	printf("Cod: %c\n\n", produs.cod);
 }
+Heap initializareHeap(int lungime) {
+	// cream un heap gol, dar cu spatiu pentru mai multe produse
+	Heap heap;
+
+	// lungimea maxima a vectorului
+	heap.lungime = lungime;
+
+	// alocam memorie pentru vectorul de produse
+	heap.produse = (Produs*)malloc(sizeof(Produs) * lungime);
+
+	// la inceput nu avem produse in heap
+	heap.nrElemente = 0;
+
+	return heap;
+}
+void filtreazaHeap(Heap heap, int pozitieNod) {
+	// functia reface proprietatea de MIN-HEAP
+	// criteriul folosit este pretul produsului
+	// produsul cu pretul cel mai mic trebuie sa fie mai sus in heap
+
+	int pozStanga = 2 * pozitieNod + 1;
+	int pozDreapta = 2 * pozitieNod + 2;
+
+	// presupunem initial ca nodul curent are pretul minim
+	int pozMin = pozitieNod;
+
+	// verificam daca fiul stang exista si are pret mai mic
+	if (pozStanga < heap.nrElemente &&
+		heap.produse[pozMin].pret > heap.produse[pozStanga].pret) {
+		pozMin = pozStanga;
+	}
+
+	// verificam daca fiul drept exista si are pret mai mic
+	if (pozDreapta < heap.nrElemente &&
+		heap.produse[pozMin].pret > heap.produse[pozDreapta].pret) {
+		pozMin = pozDreapta;
+	}
+
+	// daca unul dintre fii are pret mai mic, interschimbam produsele
+	if (pozMin != pozitieNod) {
+		Produs aux = heap.produse[pozMin];
+		heap.produse[pozMin] = heap.produse[pozitieNod];
+		heap.produse[pozitieNod] = aux;
+
+		// continuam filtrarea pe pozitia unde a ajuns produsul mutat
+		filtreazaHeap(heap, pozMin);
+	}
+}
+void filtreazaHeap(Heap heap, int pozitieNod) {
+	// functia reface proprietatea de MIN-HEAP
+	// criteriul folosit este pretul produsului
+	// produsul cu pretul cel mai mic trebuie sa fie mai sus in heap
+
+	int pozStanga = 2 * pozitieNod + 1;
+	int pozDreapta = 2 * pozitieNod + 2;
+
+	// presupunem initial ca nodul curent are pretul minim
+	int pozMin = pozitieNod;
+
+	// verificam daca fiul stang exista si are pret mai mic
+	if (pozStanga < heap.nrElemente &&
+		heap.produse[pozMin].pret > heap.produse[pozStanga].pret) {
+		pozMin = pozStanga;
+	}
+
+	// verificam daca fiul drept exista si are pret mai mic
+	if (pozDreapta < heap.nrElemente &&
+		heap.produse[pozMin].pret > heap.produse[pozDreapta].pret) {
+		pozMin = pozDreapta;
+	}
+
+	// daca unul dintre fii are pret mai mic, interschimbam produsele
+	if (pozMin != pozitieNod) {
+		Produs aux = heap.produse[pozMin];
+		heap.produse[pozMin] = heap.produse[pozitieNod];
+		heap.produse[pozitieNod] = aux;
+
+		// continuam filtrarea pe pozitia unde a ajuns produsul mutat
+		filtreazaHeap(heap, pozMin);
+	}
+}
+Heap citireHeapDeProduseDinFisier(const char* numeFisier) {
+	// citim produsele din fisier si le punem intr-un vector
+	// apoi transformam vectorul intr-un MIN-HEAP dupa pret
+
+	Heap heap = initializareHeap(10);
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		// citim cat timp mai exista linii in fisier
+		while (!feof(f)) {
+			heap.produse[heap.nrElemente++] = citireProdusDinFisier(f);
+		}
+
+		fclose(f);
+	}
+
+	// incepem filtrarea de la ultimul parinte pana la radacina
+	for (int i = (heap.nrElemente - 2) / 2; i >= 0; i--) {
+		filtreazaHeap(heap, i);
+	}
+
+	return heap;
+}
