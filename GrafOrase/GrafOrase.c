@@ -106,3 +106,85 @@ void afisareOras(Oras oras) {
 	printf("\n%d. Oras: %s, populatie: %.2f milioane",
 		oras.id, oras.nume, oras.populatie);
 }
+// Insereaza un oras in lista principala a grafului
+void inserareListaPrincipala(NodPrincipal** cap, Oras oras) {
+	NodPrincipal* nou = (NodPrincipal*)malloc(sizeof(NodPrincipal));
+
+	nou->info = oras;
+	nou->next = NULL;
+	nou->vecini = NULL;
+
+	if (*cap) {
+		NodPrincipal* aux = *cap;
+
+		while (aux->next) {
+			aux = aux->next;
+		}
+
+		aux->next = nou;
+	}
+	else {
+		*cap = nou;
+	}
+}
+
+// Insereaza un vecin in lista secundara
+void inserareListaSecundara(NodSecundar** cap, NodPrincipal* info) {
+	NodSecundar* nou = (NodSecundar*)malloc(sizeof(NodSecundar));
+
+	nou->info = info;
+	nou->next = NULL;
+
+	if (*cap) {
+		NodSecundar* aux = *cap;
+
+		while (aux->next) {
+			aux = aux->next;
+		}
+
+		aux->next = nou;
+	}
+	else {
+		*cap = nou;
+	}
+}
+
+// Cauta un oras dupa id
+NodPrincipal* cautareNodDupaId(NodPrincipal* graf, int id) {
+	while (graf != NULL && graf->info.id != id) {
+		graf = graf->next;
+	}
+
+	return graf;
+}
+
+// Adauga muchie intre doua orase
+// Graful este neorientat, deci adaugam legatura in ambele sensuri
+void adaugaMuchie(NodPrincipal* graf, int id1, int id2) {
+	NodPrincipal* nod1 = cautareNodDupaId(graf, id1);
+	NodPrincipal* nod2 = cautareNodDupaId(graf, id2);
+
+	if (nod1 != NULL && nod2 != NULL) {
+		inserareListaSecundara(&nod1->vecini, nod2);
+		inserareListaSecundara(&nod2->vecini, nod1);
+	}
+}
+
+// Afiseaza graful cu lista de vecini
+void afisareGraf(NodPrincipal* graf) {
+	while (graf != NULL) {
+		afisareOras(graf->info);
+
+		printf("\n Vecini:");
+
+		NodSecundar* vecini = graf->vecini;
+
+		while (vecini) {
+			afisareOras(vecini->info->info);
+			vecini = vecini->next;
+		}
+
+		printf("\n");
+		graf = graf->next;
+	}
+}
