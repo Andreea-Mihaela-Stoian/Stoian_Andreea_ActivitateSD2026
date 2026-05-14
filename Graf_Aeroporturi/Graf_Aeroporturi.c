@@ -207,3 +207,130 @@ void afisareGraf(NodPrincipal* graf) {
 		graf = graf->next;
 	}
 }
+// DFS folosind stiva
+void parcurgereInAdancime(
+	NodPrincipal* graf,
+	int idStart,
+	int dim) {
+
+	int* vizitat =
+		(int*)malloc(sizeof(int) * dim);
+
+	for (int i = 0; i < dim; i++) {
+		vizitat[i] = 0;
+	}
+
+	ListaDubla stiva;
+	stiva.first = NULL;
+	stiva.last = NULL;
+
+	push(&stiva, idStart);
+
+	vizitat[idStart - 1] = 1;
+
+	while (stiva.first != NULL) {
+
+		int idExtras = pop(&stiva);
+
+		NodPrincipal* extras =
+			cautareNodDupaId(graf, idExtras);
+
+		if (extras) {
+
+			afisareAeroport(extras->info);
+
+			NodSecundar* vecini =
+				extras->vecini;
+
+			while (vecini) {
+
+				int idVecin =
+					vecini->info->info.id;
+
+				if (vizitat[idVecin - 1] == 0) {
+
+					push(&stiva, idVecin);
+
+					vizitat[idVecin - 1] = 1;
+				}
+
+				vecini = vecini->next;
+			}
+		}
+	}
+
+	free(vizitat);
+}
+
+// Dezalocare graf
+void dezalocareGraf(NodPrincipal** graf) {
+
+	while (*graf) {
+
+		NodPrincipal* aux = *graf;
+
+		NodSecundar* vecin = aux->vecini;
+
+		while (vecin) {
+
+			NodSecundar* temp = vecin;
+
+			vecin = vecin->next;
+
+			free(temp);
+		}
+
+		free(aux->info.nume);
+
+		*graf = (*graf)->next;
+
+		free(aux);
+	}
+}
+
+int main() {
+
+	NodPrincipal* graf = NULL;
+
+	inserareListaPrincipala(
+		&graf,
+		initAeroport(1, "Otopeni", 14.7));
+
+	inserareListaPrincipala(
+		&graf,
+		initAeroport(2, "Heathrow", 61.6));
+
+	inserareListaPrincipala(
+		&graf,
+		initAeroport(3, "CharlesDeGaulle", 57.4));
+
+	inserareListaPrincipala(
+		&graf,
+		initAeroport(4, "Fiumicino", 29.3));
+
+	inserareListaPrincipala(
+		&graf,
+		initAeroport(5, "Schiphol", 52.5));
+
+	inserareListaPrincipala(
+		&graf,
+		initAeroport(6, "Barajas", 50.6));
+
+	adaugaMuchie(graf, 1, 2);
+	adaugaMuchie(graf, 1, 3);
+	adaugaMuchie(graf, 2, 5);
+	adaugaMuchie(graf, 3, 4);
+	adaugaMuchie(graf, 4, 6);
+	adaugaMuchie(graf, 5, 6);
+
+	printf("Afisare graf:\n");
+	afisareGraf(graf);
+
+	printf("\nDFS:\n");
+
+	parcurgereInAdancime(graf, 1, 6);
+
+	dezalocareGraf(&graf);
+
+	return 0;
+}
