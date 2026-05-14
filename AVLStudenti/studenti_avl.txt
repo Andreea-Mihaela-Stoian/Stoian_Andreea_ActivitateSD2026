@@ -1,0 +1,5 @@
+10,2,9.50,Popescu Ana,Informatica,A
+5,1,8.70,Ionescu Mihai,Cibernetica,B
+15,3,9.20,Dumitrescu Ioana,Statistica,C
+3,2,7.80,Stan Andrei,Informatica,D
+8,1,9.90,Marin Elena,Cibernetica,E
