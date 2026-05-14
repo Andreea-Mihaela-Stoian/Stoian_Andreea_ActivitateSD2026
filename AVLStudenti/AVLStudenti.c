@@ -104,3 +104,158 @@ Student initStudent(int id, int anStudiu, float medie, const char* nume, const c
 
 	return s;
 }
+int calculeazaInaltimeArbore(Nod* rad) {
+	// daca nodul este NULL, inaltimea este 0
+	if (rad == NULL) {
+		return 0;
+	}
+
+	// calculam inaltimea subarborelui stang
+	int inaltimeStanga = calculeazaInaltimeArbore(rad->stanga);
+
+	// calculam inaltimea subarborelui drept
+	int inaltimeDreapta = calculeazaInaltimeArbore(rad->dreapta);
+
+	// inaltimea arborelui este maximul dintre cele doua + radacina
+	if (inaltimeStanga > inaltimeDreapta) {
+		return inaltimeStanga + 1;
+	}
+	else {
+		return inaltimeDreapta + 1;
+	}
+}
+
+int calculDiferentaInaltimi(Nod* rad) {
+	// diferenta = inaltime stanga - inaltime dreapta
+	if (rad) {
+		return calculeazaInaltimeArbore(rad->stanga) - calculeazaInaltimeArbore(rad->dreapta);
+	}
+	else {
+		return 0;
+	}
+}
+
+void rotireLaStanga(Nod** rad) {
+	// rotire folosita cand arborele este dezechilibrat pe dreapta
+
+	Nod* aux = (*rad)->dreapta;
+
+	(*rad)->dreapta = aux->stanga;
+
+	aux->stanga = (*rad);
+
+	(*rad) = aux;
+}
+
+void rotireLaDreapta(Nod** rad) {
+	// rotire folosita cand arborele este dezechilibrat pe stanga
+
+	Nod* aux = (*rad)->stanga;
+
+	(*rad)->stanga = aux->dreapta;
+
+	aux->dreapta = (*rad);
+
+	(*rad) = aux;
+}
+
+void adaugaStudentInArbore(Nod** rad, Student studentNou) {
+	// adauga un student in arbore dupa id
+	// dupa inserare, arborele este echilibrat ca AVL
+
+	if (*rad == NULL) {
+		// daca pozitia este libera, cream nod nou
+
+		Nod* nod = (Nod*)malloc(sizeof(Nod));
+
+		nod->info = studentNou;
+		nod->stanga = NULL;
+		nod->dreapta = NULL;
+
+		*rad = nod;
+	}
+	else {
+		// daca id-ul nou este mai mic, mergem in stanga
+		if ((*rad)->info.id > studentNou.id) {
+			adaugaStudentInArbore(&((*rad)->stanga), studentNou);
+		}
+
+		// daca id-ul nou este mai mare, mergem in dreapta
+		if ((*rad)->info.id < studentNou.id) {
+			adaugaStudentInArbore(&((*rad)->dreapta), studentNou);
+		}
+	}
+
+	// verificam daca arborele s-a dezechilibrat
+	int diferentaInaltimi = calculDiferentaInaltimi(*rad);
+
+	if (diferentaInaltimi == 2) {
+		// dezechilibru pe stanga
+
+		if (calculDiferentaInaltimi((*rad)->stanga) == -1) {
+			// caz stanga-dreapta
+			rotireLaStanga(&(*rad)->stanga);
+		}
+
+		// caz stanga-stanga
+		rotireLaDreapta(rad);
+	}
+
+	if (diferentaInaltimi == -2) {
+		// dezechilibru pe dreapta
+
+		if (calculDiferentaInaltimi((*rad)->dreapta) == 1) {
+			// caz dreapta-stanga
+			rotireLaDreapta(&(*rad)->dreapta);
+		}
+
+		// caz dreapta-dreapta
+		rotireLaStanga(rad);
+	}
+}
+
+Nod* citireArboreDeStudentiDinFisier(const char* numeFisier) {
+	// citeste studentii din fisier si ii adauga in arborele AVL
+
+	Nod* rad = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		while (!feof(f)) {
+			Student s = citireStudentDinFisier(f);
+
+			if (s.id != -1) {
+				adaugaStudentInArbore(&rad, s);
+			}
+		}
+
+		fclose(f);
+	}
+	else {
+		printf("Fisierul nu a fost gasit!\n");
+	}
+
+	return rad;
+}
+
+void afisareStudentiInordine(Nod* rad) {
+	// parcurgere inordine: stanga - radacina - dreapta
+	// afiseaza studentii ordonati crescator dupa id
+
+	if (rad) {
+		afisareStudentiInordine(rad->stanga);
+		afisareStudent(rad->info);
+		afisareStudentiInordine(rad->dreapta);
+	}
+}
+
+void afisarePreordine(Nod* rad) {
+	// parcurgere preordine: radacina - stanga - dreapta
+
+	if (rad) {
+		afisareStudent(rad->info);
+		afisarePreordine(rad->stanga);
+		afisarePreordine(rad->dreapta);
+	}
+}
