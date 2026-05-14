@@ -209,7 +209,6 @@ void dezalocareHeap(Heap* heap) {
 	heap->lungime = 0;
 	heap->nrElemente = 0;
 }
-
 int main() {
 	Heap heap = citireHeapDeStudentiDinFisier("studenti.txt");
 
