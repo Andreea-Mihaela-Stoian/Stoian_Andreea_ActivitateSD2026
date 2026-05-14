@@ -74,3 +74,71 @@ void afisareCarte(Carte carte) {
 	printf("Autor: %s\n", carte.autor);
 	printf("Cod raft: %c\n\n", carte.codRaft);
 }
+void adaugaCarteInArbore(Nod** rad, Carte carteNoua) {
+	// adauga o carte in arbore dupa id
+
+	if (*rad == NULL) {
+		Nod* nod = (Nod*)malloc(sizeof(Nod));
+
+		nod->info = carteNoua;
+		nod->stanga = NULL;
+		nod->dreapta = NULL;
+
+		*rad = nod;
+	}
+	else {
+		if ((*rad)->info.id > carteNoua.id) {
+			adaugaCarteInArbore(&(*rad)->stanga, carteNoua);
+		}
+
+		if ((*rad)->info.id < carteNoua.id) {
+			adaugaCarteInArbore(&(*rad)->dreapta, carteNoua);
+		}
+	}
+}
+
+Nod* citireArboreDeCartiDinFisier(const char* numeFisier) {
+	// citeste cartile din fisier si le adauga in arbore
+
+	Nod* rad = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		while (!feof(f)) {
+			Carte c = citireCarteDinFisier(f);
+
+			if (c.id != -1) {
+				adaugaCarteInArbore(&rad, c);
+			}
+		}
+
+		fclose(f);
+	}
+	else {
+		printf("Fisierul nu a fost gasit!\n");
+	}
+
+	return rad;
+}
+
+void afisareCartiInordine(Nod* rad) {
+	// inordine: stanga - radacina - dreapta
+	// afiseaza cartile crescator dupa id
+
+	if (rad) {
+		afisareCartiInordine(rad->stanga);
+		afisareCarte(rad->info);
+		afisareCartiInordine(rad->dreapta);
+	}
+}
+
+void afisarePreordine(Nod* rad) {
+	// preordine: radacina - stanga - dreapta
+
+	if (rad) {
+		afisareCarte(rad->info);
+		afisarePreordine(rad->stanga);
+		afisarePreordine(rad->dreapta);
+	}
+}
