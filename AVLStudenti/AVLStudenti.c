@@ -259,3 +259,134 @@ void afisarePreordine(Nod* rad) {
 		afisarePreordine(rad->dreapta);
 	}
 }
+void dezalocareArboreDeStudenti(Nod** rad) {
+	// dezalocam toate nodurile si campurile alocate dinamic
+
+	if (*rad) {
+		dezalocareArboreDeStudenti(&(*rad)->stanga);
+		dezalocareArboreDeStudenti(&(*rad)->dreapta);
+
+		free((*rad)->info.nume);
+		free((*rad)->info.specializare);
+
+		free(*rad);
+		*rad = NULL;
+	}
+}
+
+Student getStudentByID(Nod* rad, int id) {
+	// cauta un student dupa id si returneaza o copie
+
+	Student s;
+	s.id = -1;
+	s.anStudiu = 0;
+	s.medie = 0;
+	s.nume = NULL;
+	s.specializare = NULL;
+	s.grupa = '-';
+
+	if (rad) {
+		if (rad->info.id == id) {
+			s = rad->info;
+
+			s.nume = (char*)malloc(strlen(rad->info.nume) + 1);
+			strcpy_s(s.nume, strlen(rad->info.nume) + 1, rad->info.nume);
+
+			s.specializare = (char*)malloc(strlen(rad->info.specializare) + 1);
+			strcpy_s(s.specializare, strlen(rad->info.specializare) + 1, rad->info.specializare);
+		}
+		else if (id < rad->info.id) {
+			s = getStudentByID(rad->stanga, id);
+		}
+		else {
+			s = getStudentByID(rad->dreapta, id);
+		}
+	}
+
+	return s;
+}
+
+int determinaNumarNoduri(Nod* rad) {
+	// calculeaza cate noduri sunt in arbore
+
+	if (rad) {
+		return determinaNumarNoduri(rad->stanga)
+			+ determinaNumarNoduri(rad->dreapta)
+			+ 1;
+	}
+
+	return 0;
+}
+
+float calculeazaSumaMediilor(Nod* rad) {
+	// aduna mediile tuturor studentilor din arbore
+
+	if (rad) {
+		return rad->info.medie
+			+ calculeazaSumaMediilor(rad->stanga)
+			+ calculeazaSumaMediilor(rad->dreapta);
+	}
+
+	return 0;
+}
+
+float calculeazaMediaGenerala(Nod* rad) {
+	// calculeaza media mediilor studentilor
+
+	int nrStudenti = determinaNumarNoduri(rad);
+
+	if (nrStudenti > 0) {
+		return calculeazaSumaMediilor(rad) / nrStudenti;
+	}
+
+	return 0;
+}
+
+int numaraStudentiDinSpecializare(Nod* rad, const char* specializare) {
+	// numara studentii care au o anumita specializare
+
+	if (rad) {
+		int nr = numaraStudentiDinSpecializare(rad->stanga, specializare)
+			+ numaraStudentiDinSpecializare(rad->dreapta, specializare);
+
+		if (strcmp(rad->info.specializare, specializare) == 0) {
+			nr++;
+		}
+
+		return nr;
+	}
+
+	return 0;
+}
+
+int main() {
+	Nod* rad = NULL;
+
+	rad = citireArboreDeStudentiDinFisier("studenti_avl.txt");
+
+	printf("Afisare inordine:\n");
+	afisareStudentiInordine(rad);
+
+	printf("Afisare preordine:\n");
+	afisarePreordine(rad);
+
+	printf("Student cautat:\n");
+	Student studentCautat = getStudentByID(rad, 8);
+	afisareStudent(studentCautat);
+
+	free(studentCautat.nume);
+	free(studentCautat.specializare);
+
+	printf("Numar noduri: %d\n", determinaNumarNoduri(rad));
+
+	printf("Inaltime arbore: %d\n", calculeazaInaltimeArbore(rad));
+
+	printf("Media generala: %.2f\n", calculeazaMediaGenerala(rad));
+
+	printf("Numar studenti Informatica: %d\n",
+		numaraStudentiDinSpecializare(rad, "Informatica"));
+
+	dezalocareArboreDeStudenti(&rad);
+
+	return 0;
+}
