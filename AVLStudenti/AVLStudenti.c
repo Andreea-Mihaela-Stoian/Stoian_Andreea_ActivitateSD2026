@@ -358,7 +358,6 @@ int numaraStudentiDinSpecializare(Nod* rad, const char* specializare) {
 
 	return 0;
 }
-
 int main() {
 	Nod* rad = NULL;
 
@@ -390,3 +389,4 @@ int main() {
 
 	return 0;
 }
+
