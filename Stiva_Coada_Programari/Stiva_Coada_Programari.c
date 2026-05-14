@@ -86,3 +86,107 @@ void afisareProgramare(Programare p) {
 	printf("Pacient: %s\n", p.pacient);
 	printf("Cod: %c\n\n", p.cod);
 }
+void pushStack(Stiva* stiva, Programare programare) {
+	// Adauga o programare in varful stivei
+
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+
+	nou->info = programare;
+
+	// Noul nod pointeaza catre fostul varf
+	nou->next = stiva->top;
+
+	// Noul nod devine varful stivei
+	stiva->top = nou;
+}
+
+Programare popStack(Stiva* stiva) {
+	// Extrage programarea din varful stivei
+
+	Programare p;
+	p.id = -1;
+	p.durataMinute = 0;
+	p.cost = 0;
+	p.serviciu = NULL;
+	p.pacient = NULL;
+	p.cod = '-';
+
+	if (stiva->top) {
+		Nod* aux = stiva->top;
+
+		p = aux->info;
+
+		// Mutam varful pe urmatorul nod
+		stiva->top = stiva->top->next;
+
+		// Stergem doar nodul
+		free(aux);
+	}
+
+	return p;
+}
+
+int emptyStack(Stiva stiva) {
+	// Returneaza 1 daca stiva este goala
+
+	return stiva.top == NULL;
+}
+
+Stiva citireStackProgramariDinFisier(const char* numeFisier) {
+	// Citeste programarile din fisier si le pune in stiva
+
+	Stiva stiva;
+	stiva.top = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		while (!feof(f)) {
+			Programare p = citireProgramareDinFisier(f);
+
+			if (p.id != -1) {
+				pushStack(&stiva, p);
+			}
+		}
+
+		fclose(f);
+	}
+	else {
+		printf("Fisierul nu a fost gasit!\n");
+	}
+
+	return stiva;
+}
+
+void afisareStiva(Stiva stiva) {
+	// Afiseaza stiva fara sa o modifice
+
+	while (stiva.top) {
+		afisareProgramare(stiva.top->info);
+		stiva.top = stiva.top->next;
+	}
+}
+
+int sizeStack(Stiva stiva) {
+	// Calculeaza numarul de elemente din stiva
+
+	int nr = 0;
+
+	while (stiva.top) {
+		nr++;
+		stiva.top = stiva.top->next;
+	}
+
+	return nr;
+}
+
+void dezalocareStivaDeProgramari(Stiva* stiva) {
+	// Dezaloca toate programarile din stiva
+
+	while (stiva->top) {
+		Programare p = popStack(stiva);
+
+		free(p.serviciu);
+		free(p.pacient);
+	}
+}
