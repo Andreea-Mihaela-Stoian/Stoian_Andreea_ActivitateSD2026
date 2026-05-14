@@ -188,3 +188,99 @@ void afisareGraf(NodPrincipal* graf) {
 		graf = graf->next;
 	}
 }
+// Parcurgere in adancime folosind stiva
+void parcurgereInAdancime(NodPrincipal* graf, int idStart, int dim) {
+	int* vectorVizitate = (int*)malloc(sizeof(int) * dim);
+
+	for (int i = 0; i < dim; i++) {
+		vectorVizitate[i] = 0;
+	}
+
+	ListaDubla stiva;
+	stiva.first = NULL;
+	stiva.last = NULL;
+
+	push(&stiva, idStart);
+
+	// marcam nodul de start ca vizitat
+	vectorVizitate[idStart - 1] = 1;
+
+	while (stiva.first != NULL) {
+		int idExtras = pop(&stiva);
+
+		NodPrincipal* nodExtras = cautareNodDupaId(graf, idExtras);
+
+		if (nodExtras) {
+			afisareOras(nodExtras->info);
+
+			NodSecundar* vecini = nodExtras->vecini;
+
+			while (vecini) {
+				int idVecin = vecini->info->info.id;
+
+				if (vectorVizitate[idVecin - 1] == 0) {
+					push(&stiva, idVecin);
+
+					// ATENTIE: aici se foloseste =, nu ==
+					vectorVizitate[idVecin - 1] = 1;
+				}
+
+				vecini = vecini->next;
+			}
+		}
+	}
+
+	free(vectorVizitate);
+}
+
+// Dezaloca graful
+void dezalocareGraf(NodPrincipal** graf) {
+	while (*graf) {
+		NodPrincipal* nodCurent = *graf;
+
+		// dezalocam lista de vecini
+		NodSecundar* vecin = nodCurent->vecini;
+
+		while (vecin) {
+			NodSecundar* auxVecin = vecin;
+			vecin = vecin->next;
+			free(auxVecin);
+		}
+
+		// dezalocam campul alocat dinamic
+		free(nodCurent->info.nume);
+
+		// trecem la urmatorul nod principal
+		*graf = (*graf)->next;
+
+		free(nodCurent);
+	}
+}
+
+int main() {
+	NodPrincipal* graf = NULL;
+
+	inserareListaPrincipala(&graf, initOras(1, "Bucuresti", 1.80));
+	inserareListaPrincipala(&graf, initOras(2, "Brasov", 0.25));
+	inserareListaPrincipala(&graf, initOras(3, "Cluj", 0.32));
+	inserareListaPrincipala(&graf, initOras(4, "Sibiu", 0.14));
+	inserareListaPrincipala(&graf, initOras(5, "Iasi", 0.29));
+	inserareListaPrincipala(&graf, initOras(6, "Constanta", 0.28));
+
+	adaugaMuchie(graf, 1, 2);
+	adaugaMuchie(graf, 1, 6);
+	adaugaMuchie(graf, 2, 4);
+	adaugaMuchie(graf, 3, 4);
+	adaugaMuchie(graf, 3, 5);
+	adaugaMuchie(graf, 5, 6);
+
+	printf("Afisare graf:\n");
+	afisareGraf(graf);
+
+	printf("\nParcurgere in adancime:\n");
+	parcurgereInAdancime(graf, 1, 6);
+
+	dezalocareGraf(&graf);
+
+	return 0;
+}
