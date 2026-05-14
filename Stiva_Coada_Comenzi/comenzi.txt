@@ -1,0 +1,5 @@
+1,3,250.50,Telefon,Popescu,A
+2,1,1200.00,Laptop,Ionescu,B
+3,5,75.25,Mouse,Dumitrescu,C
+4,2,300.00,Tastatura,Stan,D
+5,4,99.99,Casti,Marin,E
