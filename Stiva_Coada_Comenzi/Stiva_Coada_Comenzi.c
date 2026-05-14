@@ -217,3 +217,197 @@ void dezalocareStivaDeComenzi(Stiva* stiva) {
 		free(c.client);
 	}
 }
+void enqueue(Coada* coada, Comanda comanda) {
+	// Adauga o comanda la finalul cozii
+
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+
+	nou->info = comanda;
+	nou->next = NULL;
+
+	// Daca exista deja elemente in coada
+	if (coada->last) {
+		// Ultimul nod pointeaza catre noul nod
+		coada->last->next = nou;
+
+		// Noul nod devine ultimul
+		coada->last = nou;
+	}
+	else {
+		// Daca lista era goala, primul si ultimul sunt acelasi nod
+		coada->first = coada->last = nou;
+	}
+}
+
+Comanda dequeue(Coada* coada) {
+	// Extrage prima comanda din coada
+
+	Comanda c;
+	c.id = -1;
+	c.nrProduse = 0;
+	c.valoare = 0;
+	c.produs = NULL;
+	c.client = NULL;
+	c.cod = '-';
+
+	// Verificam daca exista elemente
+	if (coada->first) {
+		// Salvam primul nod
+		Nod* aux = coada->first;
+
+		// Salvam informatia
+		c = aux->info;
+
+		// Mutam inceputul cozii
+		coada->first = coada->first->next;
+
+		// Daca nu mai avem elemente, actualizam si last
+		if (coada->first == NULL) {
+			coada->last = NULL;
+		}
+
+		// Stergem nodul extras
+		free(aux);
+	}
+
+	return c;
+}
+
+Coada citireCoadaDeComenziDinFisier(const char* numeFisier) {
+	// Citeste comenzile din fisier si le pune in coada
+
+	Coada coada;
+	coada.first = NULL;
+	coada.last = NULL;
+
+	FILE* f = fopen(numeFisier, "r");
+
+	if (f) {
+		while (!feof(f)) {
+			Comanda c = citireComandaDinFisier(f);
+
+			if (c.id != -1) {
+				enqueue(&coada, c);
+			}
+		}
+
+		fclose(f);
+	}
+	else {
+		printf("Fisierul nu a fost gasit!\n");
+	}
+
+	return coada;
+}
+
+void afisareCoada(Coada coada) {
+	// Afiseaza coada fara sa o modifice
+	// Se foloseste o copie a cozii
+
+	while (coada.first) {
+		afisareComanda(coada.first->info);
+		coada.first = coada.first->next;
+	}
+}
+
+void dezalocareCoadaDeComenzi(Coada* coada) {
+	// Dezaloca toate comenzile din coada
+
+	while (coada->first) {
+		Comanda c = dequeue(coada);
+
+		free(c.produs);
+		free(c.client);
+	}
+}
+
+Comanda getComandaByID(Coada coada, int id) {
+	// Cauta o comanda dupa id in coada
+	// Returneaza o copie a comenzii gasite
+
+	Comanda c;
+	c.id = -1;
+	c.nrProduse = 0;
+	c.valoare = 0;
+	c.produs = NULL;
+	c.client = NULL;
+	c.cod = '-';
+
+	while (coada.first) {
+		if (coada.first->info.id == id) {
+			c = coada.first->info;
+
+			// Copiem profund produsul
+			c.produs = (char*)malloc(strlen(coada.first->info.produs) + 1);
+			strcpy_s(c.produs, strlen(coada.first->info.produs) + 1, coada.first->info.produs);
+
+			// Copiem profund clientul
+			c.client = (char*)malloc(strlen(coada.first->info.client) + 1);
+			strcpy_s(c.client, strlen(coada.first->info.client) + 1, coada.first->info.client);
+
+			return c;
+		}
+
+		coada.first = coada.first->next;
+	}
+
+	return c;
+}
+
+float calculeazaValoareTotala(Coada coada) {
+	// Calculeaza suma valorilor comenzilor din coada
+
+	float suma = 0;
+
+	while (coada.first) {
+		suma += coada.first->info.valoare;
+		coada.first = coada.first->next;
+	}
+
+	return suma;
+}
+
+int main() {
+	// Citim comenzile in stiva
+	Stiva stiva = citireStackComenziDinFisier("comenzi.txt");
+
+	printf("Afisare stiva:\n");
+	afisareStiva(stiva);
+
+	printf("Numar elemente stiva: %d\n", sizeStack(stiva));
+
+	printf("\nPop din stiva:\n");
+
+	// Scoatem un element din stiva
+	Comanda c1 = popStack(&stiva);
+	afisareComanda(c1);
+
+	// Dezalocam comanda extrasa
+	free(c1.produs);
+	free(c1.client);
+
+	// Citim comenzile in coada
+	Coada coada = citireCoadaDeComenziDinFisier("comenzi.txt");
+
+	printf("\nAfisare coada:\n");
+	afisareCoada(coada);
+
+	printf("\nComanda cautata:\n");
+
+	// Cautam o comanda dupa id
+	Comanda c2 = getComandaByID(coada, 3);
+	afisareComanda(c2);
+
+	// Dezalocam copia returnata
+	free(c2.produs);
+	free(c2.client);
+
+	printf("Valoare totala comenzi: %.2f\n",
+		calculeazaValoareTotala(coada));
+
+	// Dezalocam structurile
+	dezalocareStivaDeComenzi(&stiva);
+	dezalocareCoadaDeComenzi(&coada);
+
+	return 0;
+}
