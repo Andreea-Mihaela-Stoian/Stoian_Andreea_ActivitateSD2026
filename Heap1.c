@@ -200,3 +200,95 @@ Heap citireHeapDeProduseDinFisier(const char* numeFisier) {
 
 	return heap;
 }
+void afisareHeap(Heap heap) {
+	// afiseaza doar produsele vizibile din heap
+	// adica produsele care inca fac parte din heap
+
+	for (int i = 0; i < heap.nrElemente; i++) {
+		afisareProdus(heap.produse[i]);
+	}
+}
+void afiseazaHeapAscuns(Heap heap) {
+	// afiseaza produsele ascunse
+	// acestea au fost extrase, dar inca exista in vector
+
+	for (int i = heap.nrElemente; i < heap.lungime; i++) {
+		afisareProdus(heap.produse[i]);
+	}
+}
+Produs extrageProdus(Heap* heap) {
+	// extrage produsul de pe prima pozitie din heap
+	// pentru MIN-HEAP, acesta este produsul cu pretul cel mai mic
+
+	Produs produs;
+
+	// valoare default, in caz ca heap-ul este gol
+	produs.id = -1;
+	produs.stoc = 0;
+	produs.pret = 0;
+	produs.nume = NULL;
+	produs.categorie = NULL;
+	produs.cod = '-';
+
+	if (heap->nrElemente > 0) {
+
+		// salvam produsul de pe prima pozitie
+		produs = heap->produse[0];
+
+		// mutam ultimul produs vizibil pe prima pozitie
+		heap->produse[0] = heap->produse[heap->nrElemente - 1];
+
+		// punem produsul extras la final
+		// el nu este sters, ci doar devine ascuns
+		heap->produse[heap->nrElemente - 1] = produs;
+
+		// scadem numarul de elemente vizibile
+		heap->nrElemente--;
+
+		// refacem proprietatea de heap
+		for (int i = (heap->nrElemente - 2) / 2; i >= 0; i--) {
+			filtreazaHeap(*heap, i);
+		}
+	}
+
+	return produs;
+}
+void dezalocareHeap(Heap* heap) {
+	// eliberam memoria alocata dinamic pentru fiecare produs
+
+	for (int i = 0; i < heap->lungime; i++) {
+		free(heap->produse[i].nume);
+		free(heap->produse[i].categorie);
+	}
+
+	// eliberam vectorul de produse
+	free(heap->produse);
+
+	// resetam heap-ul
+	heap->produse = NULL;
+	heap->lungime = 0;
+	heap->nrElemente = 0;
+}
+int main() {
+	// citim produsele din fisier si construim heap-ul
+	Heap heap = citireHeapDeProduseDinFisier("produse.txt");
+
+	printf("Heap initial:\n");
+	afisareHeap(heap);
+
+	printf("Extrageri:\n");
+
+	// deoarece este MIN-HEAP, se extrag produsele cu pretul cel mai mic
+	afisareProdus(extrageProdus(&heap));
+	afisareProdus(extrageProdus(&heap));
+
+	printf("Heap ramas vizibil:\n");
+	afisareHeap(heap);
+
+	printf("Elemente ascunse:\n");
+	afiseazaHeapAscuns(heap);
+
+	dezalocareHeap(&heap);
+
+	return 0;
+}
