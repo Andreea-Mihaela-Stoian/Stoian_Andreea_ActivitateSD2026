@@ -15,10 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Heap1.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Heap2.c">
+    <ClCompile Include="HeapProduse.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,6 +31,5 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="produse.txt" />
-    <Text Include="studenti.txt" />
   </ItemGroup>
 </Project>
