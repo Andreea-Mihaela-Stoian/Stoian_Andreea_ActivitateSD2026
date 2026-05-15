@@ -5,7 +5,6 @@
 
 // Exercitiu: HashTable cu angajati
 // Criteriu hash: id angajat
-// Tratarea coliziunilor: chaining, adica liste simplu inlantuite
 
 struct StructuraAngajat {
 	int id;
@@ -17,21 +16,21 @@ struct StructuraAngajat {
 };
 typedef struct StructuraAngajat Angajat;
 
-// Nod pentru lista simplu inlantuita
+// Nod pentru lista simpla inlantuita
 struct Nod {
 	Angajat info;
 	struct Nod* next;
 };
 typedef struct Nod Nod;
 
-// HashTable = vector de liste
+// HashTable 
 struct HashTable {
 	int dim;
 	Nod** vector;
 };
 typedef struct HashTable HashTable;
 
-// Citeste un angajat din fisier
+// Citire angajat din fisier
 Angajat citireAngajatDinFisier(FILE* file) {
 	char buffer[100];
 	char sep[3] = ",\n";
@@ -72,7 +71,7 @@ Angajat citireAngajatDinFisier(FILE* file) {
 	return a;
 }
 
-// Afiseaza un angajat
+// Afisare angajat
 void afisareAngajat(Angajat angajat) {
 	printf("Id: %d\n", angajat.id);
 	printf("Vechime: %d\n", angajat.vechime);
@@ -81,7 +80,7 @@ void afisareAngajat(Angajat angajat) {
 	printf("Departament: %s\n", angajat.departament);
 	printf("Cod: %c\n\n", angajat.cod);
 }
-// Afiseaza lista simplu inlantuita
+// Afisare lista simpla inlantuita
 void afisareListaAngajati(Nod* cap) {
 	while (cap) {
 		afisareAngajat(cap->info);

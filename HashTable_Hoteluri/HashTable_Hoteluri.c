@@ -5,7 +5,6 @@
 
 // Exercitiu: HashTable cu hoteluri
 // Criteriu hash: id hotel
-// Coliziuni: chaining
 
 struct StructuraHotel {
 	int id;

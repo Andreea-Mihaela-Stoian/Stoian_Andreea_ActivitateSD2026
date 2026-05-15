@@ -5,7 +5,6 @@
 
 // Exercitiu: HashTable cu animale
 // Criteriu hash: id animal
-// Coliziuni: chaining, adica lista simplu inlantuita pe fiecare pozitie 
 
 struct StructuraAnimal {
 	int id;
@@ -17,7 +16,7 @@ struct StructuraAnimal {
 };
 typedef struct StructuraAnimal Animal;
 
-// Nod pentru lista simplu inlantuita
+// Nod pentru lista simpla inlantuita
 struct Nod {
 	Animal info;
 	struct Nod* next;
