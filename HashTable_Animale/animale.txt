@@ -1,0 +1,5 @@
+101,5,1200.50,Tigru,Asia,A
+102,2,800.00,Leu,Africa,B
+103,1,300.75,Panda,China,C
+104,4,1500.00,Elefant,Africa,D
+105,3,950.25,Lup,Europa,E
