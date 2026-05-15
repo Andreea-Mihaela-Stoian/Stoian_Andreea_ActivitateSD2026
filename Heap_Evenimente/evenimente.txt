@@ -1,0 +1,5 @@
+1,120,250.50,Concert,Andrei,A
+2,60,100.00,Workshop,Maria,B
+3,180,400.75,Conferinta,Ioana,C
+4,90,150.00,Seminar,Vlad,D
+5,45,80.25,Webinar,Elena,E
