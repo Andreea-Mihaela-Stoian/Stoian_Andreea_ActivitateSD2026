@@ -1,0 +1,5 @@
+10,45,35.50,PasteCarbonara,Italia,A
+5,30,25.00,Clatite,Franta,B
+15,60,50.75,Sarmale,Romania,C
+3,20,15.00,Omleta,Spania,D
+8,90,70.25,Tiramisu,Italia,E
