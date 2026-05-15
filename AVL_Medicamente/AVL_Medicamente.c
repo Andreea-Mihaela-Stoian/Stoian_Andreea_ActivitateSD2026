@@ -183,3 +183,138 @@ Nod* citireArboreDeMedicamenteDinFisier(const char* numeFisier) {
 
 	return rad;
 }
+// Afisare in ordine: stanga - radacina - dreapta
+void afisareMedicamenteInordine(Nod* rad) {
+	if (rad) {
+		afisareMedicamenteInordine(rad->stanga);
+		afisareMedicament(rad->info);
+		afisareMedicamenteInordine(rad->dreapta);
+	}
+}
+
+// Afisare preordine: radacina - stanga - dreapta
+void afisarePreordine(Nod* rad) {
+	if (rad) {
+		afisareMedicament(rad->info);
+		afisarePreordine(rad->stanga);
+		afisarePreordine(rad->dreapta);
+	}
+}
+
+// Cautare medicament dupa id
+Medicament getMedicamentByID(Nod* rad, int id) {
+	Medicament m;
+
+	m.id = -1;
+	m.stoc = 0;
+	m.pret = 0;
+	m.denumire = NULL;
+	m.producator = NULL;
+	m.cod = '-';
+	
+	if (rad) {
+		if (rad->info.id == id) {
+			m = rad->info;
+
+			m.denumire = (char*)malloc(strlen(rad->info.denumire) + 1);
+			strcpy_s(m.denumire, strlen(rad->info.denumire) + 1, rad->info.denumire);
+
+			m.producator = (char*)malloc(strlen(rad->info.producator) + 1);
+			strcpy_s(m.producator, strlen(rad->info.producator) + 1, rad->info.producator);
+		}
+
+		if (id < rad->info.id) {
+			m = getMedicamentByID(rad->stanga, id);
+		}
+
+		if (id > rad->info.id) {
+			m = getMedicamentByID(rad->dreapta, id);
+		}
+	}
+
+	return m;
+}
+
+// Determina numarul total de noduri
+int determinaNumarNoduri(Nod* rad) {
+	if (rad) {
+		return determinaNumarNoduri(rad->stanga)
+			+ determinaNumarNoduri(rad->dreapta)
+			+ 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+// Calculeaza valoarea totala a medicamentelor
+float calculeazaValoareTotala(Nod* rad) {
+	if (rad) {
+		return rad->info.pret
+			+ calculeazaValoareTotala(rad->stanga)
+			+ calculeazaValoareTotala(rad->dreapta);
+	}
+
+	return 0;
+}
+
+// Calculeaza stocul total pentru un producator
+int calculeazaStocPentruProducator(Nod* rad, const char* producator) {
+	if (rad) {
+		int suma = calculeazaStocPentruProducator(rad->stanga, producator)
+			+ calculeazaStocPentruProducator(rad->dreapta, producator);
+
+		if (strcmp(rad->info.producator, producator) == 0) {
+			suma += rad->info.stoc;
+		}
+
+		return suma;
+	}
+
+	return 0;
+}
+
+// Dezalocare arbore AVL
+void dezalocareArboreDeMedicamente(Nod** rad) {
+	if (*rad) {
+		dezalocareArboreDeMedicamente(&(*rad)->stanga);
+		dezalocareArboreDeMedicamente(&(*rad)->dreapta);
+
+		free((*rad)->info.denumire);
+		free((*rad)->info.producator);
+
+		free(*rad);
+
+		*rad = NULL;
+	}
+}
+
+int main() {
+	Nod* rad = citireArboreDeMedicamenteDinFisier("medicamente.txt");
+
+	printf("Afisare preordine:\n");
+	afisarePreordine(rad);
+
+	printf("Afisare inordine:\n");
+	afisareMedicamenteInordine(rad);
+
+	printf("Medicament cautat:\n");
+	Medicament medicamentCautat = getMedicamentByID(rad, 8);
+	afisareMedicament(medicamentCautat);
+
+	free(medicamentCautat.denumire);
+	free(medicamentCautat.producator);
+
+	printf("Numar noduri: %d\n", determinaNumarNoduri(rad));
+
+	printf("Inaltime arbore: %d\n", calculeazaInaltimeArbore(rad));
+
+	printf("Valoare totala: %.2f\n", calculeazaValoareTotala(rad));
+
+	printf("Stoc total pentru Zentiva: %d\n",
+		calculeazaStocPentruProducator(rad, "Zentiva"));
+
+	dezalocareArboreDeMedicamente(&rad);
+
+	return 0;
+}
