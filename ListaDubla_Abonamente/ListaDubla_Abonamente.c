@@ -109,3 +109,98 @@ void conversieListaVector(nodld* cap, abonament** vect, int* nr) {
 		temp = temp->next;
 	}
 }
+// Dezalocare lista dubla
+void dezalocare(nodld* cap) {
+	nodld* temp = cap;
+
+	while (temp != NULL) {
+		nodld* temp2 = temp->next;
+
+		// eliberam campurile alocate dinamic
+		free(temp->inf->numeClient);
+		free(temp->inf->cod);
+
+		// eliberam obiectul si nodul
+		free(temp->inf);
+		free(temp);
+
+		temp = temp2;
+	}
+}
+
+int main() {
+	int n;
+
+	printf("Nr abonamente=");
+	scanf("%d", &n);
+
+	nodld* cap = NULL;
+	nodld* coada = NULL;
+
+	abonament* a;
+	char buffer[100];
+
+	for (int i = 0; i < n; i++) {
+		a = (abonament*)malloc(sizeof(abonament));
+
+		a->cod = (int*)malloc(sizeof(int));
+
+		printf("Cod=");
+		scanf("%d", a->cod);
+
+		printf("Nume client=");
+		scanf("%s", buffer);
+
+		a->numeClient = (char*)malloc((strlen(buffer) + 1) * sizeof(char));
+		strcpy(a->numeClient, buffer);
+
+		printf("Pret=");
+		scanf("%f", &a->pret);
+
+		printf("Durata luni=");
+		scanf("%f", &a->durataLuni);
+
+		// inseram abonamentul in lista
+		cap = inserare(cap, &coada, a);
+
+		// dezalocam obiectul temporar
+		free(a->numeClient);
+		free(a->cod);
+		free(a);
+	}
+
+	printf("\n--- Traversare normala ---");
+	traversare(cap);
+
+	printf("\n--- Traversare inversa ---");
+	traversareInvers(coada);
+
+	printf("\n------- Conversie in vector -----------");
+
+	abonament** vect = (abonament**)malloc(n * sizeof(abonament*));
+	int nr = 0;
+
+	conversieListaVector(cap, vect, &nr);
+
+	for (int i = 0; i < nr; i++) {
+		printf("\nCod=%d, Client=%s, Pret=%5.2f, Durata=%5.2f luni",
+			*(vect[i]->cod),
+			vect[i]->numeClient,
+			vect[i]->pret,
+			vect[i]->durataLuni);
+	}
+
+	// dezalocare vector
+	for (int i = 0; i < nr; i++) {
+		free(vect[i]->numeClient);
+		free(vect[i]->cod);
+		free(vect[i]);
+	}
+
+	free(vect);
+
+	// dezalocare lista
+	dezalocare(cap);
+
+	return 0;
+}
