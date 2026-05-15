@@ -33,6 +33,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ListaSimpla_Carti", "ListaS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ListaSimpla_Bilete", "ListaSimpla_Bilete\ListaSimpla_Bilete.vcxproj", "{4EB494E5-825C-4545-AE03-3D997FA3A475}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vector_Matrice_Cosmetice", "Vector_Matrice_Cosmetice\Vector_Matrice_Cosmetice.vcxproj", "{17E17BA8-912A-42F9-BCA7-80EA5363059D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -161,6 +163,14 @@ Global
 		{4EB494E5-825C-4545-AE03-3D997FA3A475}.Release|x64.Build.0 = Release|x64
 		{4EB494E5-825C-4545-AE03-3D997FA3A475}.Release|x86.ActiveCfg = Release|Win32
 		{4EB494E5-825C-4545-AE03-3D997FA3A475}.Release|x86.Build.0 = Release|Win32
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Debug|x64.ActiveCfg = Debug|x64
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Debug|x64.Build.0 = Debug|x64
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Debug|x86.ActiveCfg = Debug|Win32
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Debug|x86.Build.0 = Debug|Win32
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Release|x64.ActiveCfg = Release|x64
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Release|x64.Build.0 = Release|x64
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Release|x86.ActiveCfg = Release|Win32
+		{17E17BA8-912A-42F9-BCA7-80EA5363059D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
