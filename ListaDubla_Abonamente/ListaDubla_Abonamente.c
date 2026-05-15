@@ -55,3 +55,57 @@ nodld* inserare(nodld* cap, nodld** coada, abonament* a) {
 
 	return cap;
 }
+// Traversare de la inceput spre final
+void traversare(nodld* cap) {
+	nodld* temp = cap;
+
+	while (temp != NULL) {
+		printf("\nCod=%d, Client=%s, Pret=%5.2f, Durata=%5.2f luni",
+			*(temp->inf->cod),
+			temp->inf->numeClient,
+			temp->inf->pret,
+			temp->inf->durataLuni);
+
+		temp = temp->next;
+	}
+}
+
+// Traversare inversa, de la final spre inceput
+void traversareInvers(nodld* coada) {
+	nodld* temp = coada;
+
+	while (temp != NULL) {
+		printf("\nCod=%d, Client=%s, Pret=%5.2f, Durata=%5.2f luni",
+			*(temp->inf->cod),
+			temp->inf->numeClient,
+			temp->inf->pret,
+			temp->inf->durataLuni);
+
+		temp = temp->prev;
+	}
+}
+
+// Conversie lista dubla in vector
+void conversieListaVector(nodld* cap, abonament** vect, int* nr) {
+	nodld* temp = cap;
+
+	while (temp != NULL) {
+		// alocam element nou in vector
+		vect[*nr] = (abonament*)malloc(sizeof(abonament));
+
+		// copiem codul
+		vect[*nr]->cod = (int*)malloc(sizeof(int));
+		*(vect[*nr]->cod) = *(temp->inf->cod);
+
+		// copiem numele clientului
+		vect[*nr]->numeClient = (char*)malloc((strlen(temp->inf->numeClient) + 1) * sizeof(char));
+		strcpy(vect[*nr]->numeClient, temp->inf->numeClient);
+
+		// copiem campurile simple
+		vect[*nr]->pret = temp->inf->pret;
+		vect[*nr]->durataLuni = temp->inf->durataLuni;
+
+		(*nr)++;
+		temp = temp->next;
+	}
+}
