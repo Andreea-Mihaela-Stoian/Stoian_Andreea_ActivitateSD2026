@@ -1,0 +1,5 @@
+10,30,25.50,Paracetamol,Terapia,A
+5,20,18.00,Nurofen,Reckitt,B
+15,50,35.75,Augmentin,GSK,C
+3,10,12.50,NoSpa,Sanofi,D
+8,25,22.00,Ibuprofen,Zentiva,E
